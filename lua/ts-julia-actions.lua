@@ -124,7 +124,10 @@ M.short_to_long_function = function()
       local children = ts_utils.get_named_children(compound_statement)
       local transformed_lines = { string.format("function %s", call_expr) }
       for _, child in ipairs(children) do
-        transformed_lines[#transformed_lines + 1] = string.format("    %s", vim.treesitter.get_node_text(child, bufnr))
+        local lines = split_into_lines(vim.treesitter.get_node_text(child, bufnr))
+        for _, line in ipairs(lines) do
+          transformed_lines[#transformed_lines + 1] = string.format("    %s", line)
+        end
       end
       transformed_lines[#transformed_lines + 1] = "end"
       -- Replace the function definition in the buffer with the transformed version
