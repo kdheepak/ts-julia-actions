@@ -34,4 +34,4 @@ return {
 
 ### Usage
 
-Place cursor on `=` and run `:JuliaShortToLongFunctionAction`.
+Place cursor anywhere inside a function and run `:JuliaShortToLongFunctionAction` or `JuliaLongToShortFunctionAction`.
