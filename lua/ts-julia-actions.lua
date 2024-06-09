@@ -2,25 +2,6 @@ local M = {}
 
 local ts_utils = require("nvim-treesitter.ts_utils")
 
-function M.set_repeat(fn)
-  return function(...)
-    local args = { ... }
-    local nargs = select("#", ...)
-    vim.go.operatorfunc = "v:lua.require'ts-julia-actions'.repeat_action"
-
-    M.repeat_action = function()
-      fn(unpack(args, 1, nargs))
-
-      local action =
-        vim.api.nvim_replace_termcodes(string.format("<cmd>call %s()<cr>", vim.go.operatorfunc), true, true, true)
-
-      pcall(vim.fn["repeat#set"], action, -1)
-    end
-
-    vim.cmd("normal! g@l")
-  end
-end
-
 M.julia_actions = {}
 
 function M.setup(opts)
@@ -36,12 +17,6 @@ function M.setup(opts)
     "JuliaLongToShortFunctionAction",
     M.long_to_short_function,
     { desc = "Performs long to short function action on the TS node under the cursor." }
-  )
-
-  vim.api.nvim_create_user_command(
-    "JuliaToggleFunctionDefinitionAction",
-    M.toggle_function_definition,
-    { desc = "Performs toggle function Definition action on the TS node under the cursor." }
   )
 end
 
@@ -73,7 +48,7 @@ local function _get_parent_function_node()
   return node
 end
 
-M.long_to_short_function = M.set_repeat(function()
+M.long_to_short_function = function()
   local bufnr = vim.api.nvim_get_current_buf()
 
   local function_node = _get_parent_function_node()
@@ -108,7 +83,7 @@ M.long_to_short_function = M.set_repeat(function()
   else
     vim.notify("JuliaLongToShortFunctionAction can only be performed on long functions.", vim.log.levels.ERROR)
   end
-end)
+end
 
 local function _get_parent_assignment_node(bufnr)
   local node = ts_utils.get_node_at_cursor()
@@ -135,7 +110,7 @@ local function _get_parent_assignment_node(bufnr)
   return node
 end
 
-M.short_to_long_function = M.set_repeat(function()
+M.short_to_long_function = function()
   local bufnr = vim.api.nvim_get_current_buf()
 
   local assignment_node = _get_parent_assignment_node(bufnr)
@@ -148,7 +123,7 @@ M.short_to_long_function = M.set_repeat(function()
       local compound_statement = assignment_node:named_child(2)
       local children = ts_utils.get_named_children(compound_statement)
       local transformed_lines = { string.format("function %s", call_expr) }
-      for i, child in ipairs(children) do
+      for _, child in ipairs(children) do
         transformed_lines[#transformed_lines + 1] = string.format("    %s", vim.treesitter.get_node_text(child, bufnr))
       end
       transformed_lines[#transformed_lines + 1] = "end"
@@ -165,16 +140,6 @@ M.short_to_long_function = M.set_repeat(function()
     end
   else
     vim.notify("JuliaShortToLongFunctionAction can only be performed on short functions.", vim.log.levels.ERROR)
-  end
-end)
-
-M.toggle_function_definition = function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local assignment_node = _get_parent_assignment_node(bufnr)
-  if assignment_node then
-    M.short_to_long_function()
-  else
-    M.long_to_short_function()
   end
 end
 
