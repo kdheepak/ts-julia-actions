@@ -2,9 +2,7 @@
 
 This is a Neovim plugin written in Lua that uses Tree-sitter to transform Julia function definitions from the single-line format to the multiline format.
 
-
-https://github.com/kdheepak/ts-julia-actions/assets/1813121/a747470d-5a07-4de2-a4cc-050b7446ee29
-
+https://github.com/kdheepak/ts-julia-actions/assets/1813121/b573438e-4987-40a2-84a9-8491d1cb91c3
 
 ### Prerequisites
 
