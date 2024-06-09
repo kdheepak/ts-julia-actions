@@ -28,6 +28,26 @@ return {
 
 2. Install Julia Tree-sitter grammar
 
+Either automatically:
+
+```lua
+return {
+  "kdheepak/ts-julia-actions",
+  opts = {},
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require'nvim-treesitter.configs'.setup {
+        ensure_installed = { "julia" },
+      }
+    end,
+  },
+}
+```
+
+Or manually:
+
 ```vim
 :TSInstall julia
 ```
