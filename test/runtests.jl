@@ -1,4 +1,23 @@
-foo(x) = x + 1
+"""
+# Header 1
+
+## Header 2
+
+### Header 3
+
+1. List element 1
+2. Syntax highlighting for inline `code`
+3. **Bold** and _Italic_
+
+```julia
+function test()
+    println("hello world")
+end
+```
+"""
+function foo(x)
+  x + 1
+end
 
 foo(a,
     b,
@@ -24,15 +43,9 @@ markdown = md"""
 2. Syntax highlighting for inline `code`
 3. **Bold** and _Italic_
 
-```julia
-function test()
-println("hello world")
-end
-```
-
 ```rust
 fn test() {
-println("hello world")
+    println("hello world")
 }
 ```
 """
